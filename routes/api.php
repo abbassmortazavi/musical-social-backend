@@ -16,10 +16,11 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 |
 */
 
-Route::middleware('auth:sanctum')->group( function () {
-    Route::get('inside-mware', function (){
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('inside-mware', function () {
         return response()->json('Success', ResponseAlias::HTTP_OK);
     });
+    Route::post('logout', [AuthController::class, 'logout']);
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -27,4 +28,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
+    Route::post('login', 'login');
+
 });

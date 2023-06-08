@@ -11,6 +11,8 @@
 namespace App\Services\User;
 
 use App\Models\User;
+use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -28,11 +30,43 @@ class UserService
             'first_name' => $attributes['first_name'],
             'last_name' => $attributes['last_name'],
             'email' => $attributes['email'],
-            'password' => bcrypt($attributes['password']),
+            'password' => Hash::make($attributes['password']),
         ]);
 
         $data['token'] = $user->createToken('user_token')->plainTextToken;
         $data['user'] = $user;
+        return $data;
+    }
+
+    /**
+     * @param array $attributes
+     * @return array
+     * @throws Exception
+     */
+    public function login(array $attributes): array
+    {
+        $user = $this->user->query()->where('email', '=', $attributes['email'])->firstOrFail();
+
+        if (!Hash::check($attributes['password'], $user->password)) {
+            throw new Exception('Something Wrong in Login!!');
+        }
+
+        $data['token'] = $user->createToken('user_token')->plainTextToken;
+        $data['user'] = $user;
+        return $data;
+    }
+
+    /**
+     * @param array $attributes
+     * @return array
+     * @throws Exception
+     */
+    public function logout(array $attributes): array
+    {
+        $user = $this->user->query()->findOrFail($attributes['user_id']);
+
+        $user->tokens()->delete();
+        $data['message'] = "User Logout SuccessFully!";
         return $data;
     }
 }

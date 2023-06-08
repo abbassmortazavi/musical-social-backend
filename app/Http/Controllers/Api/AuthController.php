@@ -29,4 +29,30 @@ class AuthController extends Controller
             return response()->json($exception->getMessage());
         }
     }
+
+    /**
+     * @param UserStoreRequest $request
+     * @return JsonResponse
+     */
+    public function login(UserStoreRequest $request)
+    {
+        try {
+            return response()->json($this->service->login($request->only('password','email')), ResponseAlias::HTTP_OK);
+        } catch (Throwable $exception) {
+            return response()->json($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param UserStoreRequest $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        try {
+            return response()->json($this->service->logout($request->all()), ResponseAlias::HTTP_OK);
+        } catch (Throwable $exception) {
+            return response()->json($exception->getMessage());
+        }
+    }
 }
