@@ -13,7 +13,7 @@ namespace App\Services\User;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-
+//ta 23
 class UserService
 {
     public function __construct(protected User $user)
@@ -84,7 +84,7 @@ class UserService
         return $this->user->query()->findOrFail($id)->update([
             'first_name'=>$attributes['first_name'],
             'last_name'=>$attributes['last_name'],
-            'email'=>$attributes['email'],
+            //'email'=>$attributes['email'],
         ]);
     }
 }
