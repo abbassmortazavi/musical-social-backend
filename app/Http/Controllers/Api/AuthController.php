@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\Auth\UserLoginRequest;
+use App\Http\Requests\Auth\UserLogoutRequest;
+use App\Http\Requests\Auth\UserStoreRequest;
 use App\Services\User\UserService;
-use http\Client\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
@@ -31,10 +31,10 @@ class AuthController extends Controller
     }
 
     /**
-     * @param UserStoreRequest $request
+     * @param UserLoginRequest $request
      * @return JsonResponse
      */
-    public function login(UserStoreRequest $request)
+    public function login(UserLoginRequest $request)
     {
         try {
             return response()->json($this->service->login($request->only('password','email')), ResponseAlias::HTTP_OK);
@@ -44,10 +44,10 @@ class AuthController extends Controller
     }
 
     /**
-     * @param UserStoreRequest $request
+     * @param UserLogoutRequest $request
      * @return JsonResponse
      */
-    public function logout(Request $request)
+    public function logout(UserLogoutRequest $request)
     {
         try {
             return response()->json($this->service->logout($request->all()), ResponseAlias::HTTP_OK);

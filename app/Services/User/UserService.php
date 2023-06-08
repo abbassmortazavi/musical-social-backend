@@ -69,4 +69,22 @@ class UserService
         $data['message'] = "User Logout SuccessFully!";
         return $data;
     }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function show(int $id): object
+    {
+        return $this->user->query()->findOrFail($id);
+    }
+
+    public function update(array $attributes, int $id)
+    {
+        return $this->user->query()->findOrFail($id)->update([
+            'first_name'=>$attributes['first_name'],
+            'last_name'=>$attributes['last_name'],
+            'email'=>$attributes['email'],
+        ]);
+    }
 }
