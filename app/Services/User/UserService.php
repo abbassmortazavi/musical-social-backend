@@ -11,8 +11,10 @@
 namespace App\Services\User;
 
 use App\Models\User;
+use App\Services\ImageService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+
 //ta 23
 class UserService
 {
@@ -79,11 +81,23 @@ class UserService
         return $this->user->query()->findOrFail($id);
     }
 
-    public function update(array $attributes, int $id)
+    /**
+     * @param array $attributes
+     * @param int $id
+     * @return bool|int
+     */
+    public function update(array $attributes, int $id): bool|int
     {
-        return $this->user->query()->findOrFail($id)->update([
-            'first_name'=>$attributes['first_name'],
-            'last_name'=>$attributes['last_name'],
+
+        $user = $this->user->query()->findOrFail($id);
+        if (request()->hasFile('image')) {
+            app(ImageService::class)->updateImage($user, request(), '/images/users/', 'update');
+        }
+        return $user->update([
+            'first_name' => $attributes['first_name'],
+            'last_name' => $attributes['last_name'],
+            'location' => $attributes['location'],
+            'description' => $attributes['description'],
             //'email'=>$attributes['email'],
         ]);
     }
