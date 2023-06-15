@@ -11,8 +11,6 @@
 namespace App\Services;
 
 
-
-
 use Intervention\Image\Facades\Image;
 
 class ImageService
@@ -20,6 +18,7 @@ class ImageService
     public function updateImage($model, $request, $path, $methodType)
     {
         $image = Image::make($request->file('image'));
+
         if (!empty($model->image)) {
             $currentImage = public_path() . $path . $model->image;
             if (file_exists($currentImage)) {
@@ -37,5 +36,7 @@ class ImageService
         }
         $model->image = $name;
         $model->save();
+
+
     }
 }

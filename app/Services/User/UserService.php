@@ -13,6 +13,7 @@ namespace App\Services\User;
 use App\Models\User;
 use App\Services\ImageService;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 //ta 23
@@ -48,7 +49,6 @@ class UserService
     public function login(array $attributes): array
     {
         $user = $this->user->query()->where('email', '=', $attributes['email'])->firstOrFail();
-
         if (!Hash::check($attributes['password'], $user->password)) {
             throw new Exception('Something Wrong in Login!!');
         }
@@ -88,17 +88,19 @@ class UserService
      */
     public function update(array $attributes, int $id): bool|int
     {
-
         $user = $this->user->query()->findOrFail($id);
+        $image = "";
         if (request()->hasFile('image')) {
             app(ImageService::class)->updateImage($user, request(), '/images/users/', 'update');
+        } else {
+            $image = $user->image;
         }
         return $user->update([
             'first_name' => $attributes['first_name'],
             'last_name' => $attributes['last_name'],
             'location' => $attributes['location'],
             'description' => $attributes['description'],
-            //'email'=>$attributes['email'],
+            'image' => $image,
         ]);
     }
 }
