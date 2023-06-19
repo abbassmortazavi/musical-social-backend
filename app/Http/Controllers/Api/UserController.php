@@ -33,13 +33,14 @@ class UserController extends Controller
      * @param UserUpdateRequest $request
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function update(UserUpdateRequest $request, int $id)
     {
         try {
-
             return response()->json($this->service->update($request->all(), $id), ResponseAlias::HTTP_OK);
         } catch (Throwable $exception) {
+            throw new \Exception($exception);
             return response()->json($exception->getMessage());
         }
     }

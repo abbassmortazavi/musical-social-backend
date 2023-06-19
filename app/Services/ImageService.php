@@ -11,12 +11,18 @@
 namespace App\Services;
 
 
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 class ImageService
 {
+    /**
+     * @throws Exception
+     */
     public function updateImage($model, $request, $path, $methodType)
     {
+
         $image = Image::make($request->file('image'));
 
         if (!empty($model->image)) {
@@ -31,11 +37,12 @@ class ImageService
         $name = time() . '.' . $extension;
         $image->save(public_path() . $path . $name);
 
-        if ($methodType === "store") {
+      /*  if ($methodType === "store") {
             $model->user_id = $request->get('user_id');
-        }
-        $model->image = $name;
-        $model->save();
+        }*/
+  /*      $model->profile_pic = $name;
+        $model->save();*/
+        return $name;
 
 
     }

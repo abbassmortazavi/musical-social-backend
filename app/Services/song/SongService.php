@@ -56,7 +56,6 @@ class SongService
      */
     public function store(array $attributes)
     {
-//        return $attributes;
         $file = $attributes['file'];
         if (empty($file)) {
             throw new \Exception('No Song Uploaded!!');

@@ -15,6 +15,7 @@ use App\Services\ImageService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 //ta 23
 class UserService
@@ -85,13 +86,13 @@ class UserService
      * @param array $attributes
      * @param int $id
      * @return bool|int
+     * @throws Exception
      */
     public function update(array $attributes, int $id): bool|int
     {
-        $user = $this->user->query()->findOrFail($id);
-        $image = "";
+        $user = $this->user->query()->whereId($id)->first();
         if (request()->hasFile('image')) {
-            app(ImageService::class)->updateImage($user, request(), '/images/users/', 'update');
+            $image = app(ImageService::class)->updateImage($user, request(), '/images/users/', 'update');
         } else {
             $image = $user->image;
         }
