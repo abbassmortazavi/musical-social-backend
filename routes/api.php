@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SongController;
+use App\Http\Controllers\Api\SongsByUserController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('songs', [SongController::class, 'store']);
     Route::delete('delete/song/{id}/{user_id}', [SongController::class, 'destroy']);
+    Route::get('user/{user_id}/songs', [SongsByUserController::class, 'index']);
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
