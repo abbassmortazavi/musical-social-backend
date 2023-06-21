@@ -21,7 +21,7 @@ class SongsByUserController extends Controller
     {
         try {
             $user = $this->service->show($userId);
-            return response()->json($user->songs);
+            return response()->json($user->load('songs'));
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
             return response()->json($exception->getMessage());

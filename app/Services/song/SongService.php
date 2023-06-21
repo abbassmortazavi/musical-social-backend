@@ -12,6 +12,7 @@ namespace App\Services\song;
 
 use App\Models\Song;
 use App\Services\User\UserService;
+use Illuminate\Support\Facades\Log;
 
 class SongService
 {
@@ -64,7 +65,7 @@ class SongService
 
         $user = app(UserService::class)->show($attributes['user_id']);
         $song = $file->getClientOriginalName();
-        $file->move('songs/' . $user->id . $song);
+        $file->move('songs/' . $user->id, $song);
         $this->song->query()->create([
             'user_id' => $user->id,
             'title' => $attributes['title'],
