@@ -62,8 +62,6 @@ class SongService
         if (empty($file)) {
             throw new Exception('No Song Uploaded!!');
         }
-
-
         $user = app(UserService::class)->show($attributes['user_id']);
         $song = $file->getClientOriginalName();
         $file->move('songs/' . $user->id, $song);

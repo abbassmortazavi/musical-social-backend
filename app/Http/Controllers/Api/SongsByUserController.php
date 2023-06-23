@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\User\UserService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SongsByUserController extends Controller
 {
@@ -21,6 +22,7 @@ class SongsByUserController extends Controller
     {
         try {
             $user = $this->service->show($userId);
+            Log::info($userId);
             return response()->json($user->load('songs'));
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
