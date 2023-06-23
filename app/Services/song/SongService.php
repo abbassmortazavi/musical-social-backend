@@ -12,6 +12,7 @@ namespace App\Services\song;
 
 use App\Models\Song;
 use App\Services\User\UserService;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class SongService
@@ -53,13 +54,13 @@ class SongService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function store(array $attributes)
+    public function store(array $attributes): void
     {
         $file = $attributes['file'];
         if (empty($file)) {
-            throw new \Exception('No Song Uploaded!!');
+            throw new Exception('No Song Uploaded!!');
         }
 
 
@@ -73,7 +74,7 @@ class SongService
         ]);
     }
 
-    public function destroy(int $id, int $userId)
+    public function destroy(int $id, int $userId): void
     {
         $song = $this->find($id);
         $currentSong = public_path() . "/songs/" . $userId . "/" . $song->song;
@@ -89,6 +90,6 @@ class SongService
      */
     public function find(int $id): object
     {
-        return $this->song->query()->firstOrFail($id);
+        return $this->song->query()->findOrFail($id);
     }
 }
