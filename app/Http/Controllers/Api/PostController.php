@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Song\SongStoreRequest;
-use App\Models\Song;
-use App\Services\song\PostService;
+use App\Services\Post\PostService;
 use Illuminate\Http\Request;
 
-class SongController extends Controller
+class PostController extends Controller
 {
     public function __construct(protected PostService $service)
     {
@@ -38,7 +36,7 @@ class SongController extends Controller
     {
         try {
             $this->service->store($request->all());
-            return response()->json(['message' => 'Song Saved']);
+            return response()->json(['message' => 'Post Saved']);
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage());
             return response()->json($exception->getMessage());
@@ -48,7 +46,7 @@ class SongController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Song $song)
+    public function show(string $id)
     {
         //
     }
@@ -56,7 +54,7 @@ class SongController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Song $song)
+    public function edit(string $id)
     {
         //
     }
@@ -64,7 +62,7 @@ class SongController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Song $song)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -72,14 +70,8 @@ class SongController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id, int $userId)
+    public function destroy(string $id)
     {
-        try {
-            $this->service->destroy($id, $userId);
-            return response()->json(['message' => 'Song Deleted']);
-        } catch (\Exception $exception) {
-            report($exception->getMessage());
-            return response()->json($exception->getMessage());
-        }
+        //
     }
 }

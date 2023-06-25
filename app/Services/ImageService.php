@@ -20,7 +20,7 @@ class ImageService
     /**
      * @throws Exception
      */
-    public function updateImage($model, $request, $path, $methodType)
+    public function updateImage($model, $request, $path, $methodType): string
     {
 
         $image = Image::make($request->file('image'));
