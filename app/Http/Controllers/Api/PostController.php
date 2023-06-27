@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\PostStoreRequest;
 use App\Services\Post\PostService;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -14,10 +17,16 @@ class PostController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @throws Exception
      */
     public function index()
     {
-        //
+        try {
+            return response()->json($this->service->index());
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+            return response()->json($exception->getMessage());
+        }
     }
 
     /**
@@ -30,25 +39,31 @@ class PostController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @throws \Exception
+     * @throws Exception
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
         try {
             $this->service->store($request->all());
             return response()->json(['message' => 'Post Saved']);
-        } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage());
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
             return response()->json($exception->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
+     * @throws Exception
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        try {
+            return response()->json(['data' =>  $this->service->show($id)]);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+            return response()->json($exception->getMessage());
+        }
     }
 
     /**
@@ -70,8 +85,29 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        try {
+            $this->service->destroy($id);
+            return response()->json(['message' => 'Post Deleted']);
+        } catch (\Exception $exception) {
+            report($exception->getMessage());
+            return response()->json($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function postByUser(int $id)
+    {
+        try {
+            return response()->json(['data' =>  $this->service->postByUser($id)]);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+            return response()->json($exception->getMessage());
+        }
     }
 }

@@ -15,6 +15,7 @@ use App\Models\Song;
 use App\Services\ImageService;
 use App\Services\User\UserService;
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\Log;
 
 class PostService
@@ -29,7 +30,7 @@ class PostService
      */
     public function show(int $id): object
     {
-        return $this->post->query()->findOrFail($id);
+        return $this->post->query()->with('user')->findOrFail($id);
     }
 
     /**
@@ -40,19 +41,26 @@ class PostService
      */
     public function update(array $attributes, int $id): bool|int
     {
-        $user = $this->user->query()->findOrFail($id);
-        $image = "";
-        if (request()->hasFile('image')) {
-            app(ImageService::class)->updateImage($user, request(), '/images/users/', 'update');
-        } else {
-            $image = $user->image;
+        $post = $this->post->query()->findOrFail($id);
+
+        $file = $attributes['image'];
+        if (empty($file)) {
+            throw new Exception('No File Uploaded!!');
         }
-        return $user->update([
-            'first_name' => $attributes['first_name'],
-            'last_name' => $attributes['last_name'],
-            'location' => $attributes['location'],
-            'description' => $attributes['description'],
-            'image' => $image,
+
+        if (request()->hasFile('image')) {
+            $image = app(ImageService::class)->updateImage($post->user_id, request(), '/posts/', 'store');
+            $post = $file->getClientOriginalName();
+            $file->move('posts/' . $post->id, $post);
+        }
+
+
+        $this->post->query()->update([
+            'user_id' => $post->id,
+            'title' => $attributes['title'] ?? $post->title,
+            'location' => $attributes['location'] ?? $post->location,
+            'description' => $attributes['description'] ?? $post->description,
+            'image' => $image ?? $post->image,
         ]);
     }
 
@@ -83,12 +91,12 @@ class PostService
         ]);
     }
 
-    public function destroy(int $id, int $userId): void
+    public function destroy(int $id): void
     {
         $post = $this->find($id);
-        $currentSong = public_path() . "/posts/" . $userId . "/" . $post->post;
-        if (file_exists($currentSong)) {
-            unlink($currentSong);
+        $currentPost = public_path() . "/posts/" . $post->image;
+        if (file_exists($currentPost)) {
+            unlink($currentPost);
         }
         $post->delete();
     }
@@ -100,5 +108,29 @@ class PostService
     public function find(int $id): object
     {
         return $this->post->query()->findOrFail($id);
+    }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function postByUser(int $id): object
+    {
+        $user = app(UserService::class)->show($id);
+
+        return $user->load('posts');
+    }
+
+    /**
+     * @return array
+     */
+    public function index(): array
+    {
+        $data['posts'] = $this->post->query()
+            ->with('user')
+            ->orderByDesc('updated_at')
+            ->simplePaginate(10);
+        $data['pageCount'] = count(Post::all());
+        return $data;
     }
 }
