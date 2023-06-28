@@ -43,24 +43,18 @@ class PostService
     {
         $post = $this->post->query()->findOrFail($id);
 
-        $file = $attributes['image'];
-        if (empty($file)) {
-            throw new Exception('No File Uploaded!!');
-        }
-
         if (request()->hasFile('image')) {
             $image = app(ImageService::class)->updateImage($post->user_id, request(), '/posts/', 'store');
-            $post = $file->getClientOriginalName();
-            $file->move('posts/' . $post->id, $post);
+        } else {
+            $image = $post->image;
         }
 
 
-        $this->post->query()->update([
-            'user_id' => $post->id,
+        return $post->update([
             'title' => $attributes['title'] ?? $post->title,
             'location' => $attributes['location'] ?? $post->location,
             'description' => $attributes['description'] ?? $post->description,
-            'image' => $image ?? $post->image,
+            'image' => $image,
         ]);
     }
 

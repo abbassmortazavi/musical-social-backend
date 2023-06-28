@@ -59,7 +59,7 @@ class PostController extends Controller
     public function show(int $id)
     {
         try {
-            return response()->json(['data' =>  $this->service->show($id)]);
+            return response()->json(['data' => $this->service->show($id)]);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
             return response()->json($exception->getMessage());
@@ -77,9 +77,14 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        //
+        try {
+            return response()->json(['data' => $this->service->update($request->all(), $id)]);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+            return response()->json($exception->getMessage());
+        }
     }
 
     /**
@@ -104,7 +109,7 @@ class PostController extends Controller
     public function postByUser(int $id)
     {
         try {
-            return response()->json(['data' =>  $this->service->postByUser($id)]);
+            return response()->json(['data' => $this->service->postByUser($id)]);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
             return response()->json($exception->getMessage());

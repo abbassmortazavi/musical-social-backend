@@ -44,8 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(PostController::class)->group(function () {
         Route::post('posts', 'store');
-        Route::get('post/{user_id}', 'show');
-        Route::get('post/{user_id}', 'postByUser');
+        Route::put('post/{id}', 'update');
+        Route::get('post/{id}', 'show');
+        Route::get('post/post-user/{user_id}', 'postByUser');
         Route::delete('delete/post/{id}', 'destroy');
     });
 
