@@ -123,7 +123,7 @@ class PostService
         $data['posts'] = $this->post->query()
             ->with('user')
             ->orderByDesc('updated_at')
-            ->simplePaginate(10);
+            ->simplePaginate(1);
         $data['pageCount'] = count(Post::all());
         return $data;
     }

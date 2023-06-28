@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Song\SongStoreRequest;
 use App\Models\Song;
 use App\Services\song\PostService;
+use App\Services\song\SongService;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
 {
-    public function __construct(protected PostService $service)
+    public function __construct(protected SongService $service)
     {
     }
 
